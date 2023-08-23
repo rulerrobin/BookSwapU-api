@@ -107,4 +107,4 @@ const chats = [
    },
  ];
 
- export default chat
+ export default chats

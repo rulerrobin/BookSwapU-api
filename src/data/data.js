@@ -106,3 +106,5 @@ const chats = [
      },
    },
  ];
+
+ export default chat

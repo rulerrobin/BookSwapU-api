@@ -1,7 +1,6 @@
 {
   "name": "bookswapu-api",
   "version": "1.0.0",
-  "description": "",
   "main": "index.js",
   "type": "module",
   "scripts": {
@@ -21,5 +20,6 @@
   "devDependencies": {
     "jest": "^29.6.2",
     "supertest": "^6.3.3"
-  }
+  },
+  "description": ""
 }

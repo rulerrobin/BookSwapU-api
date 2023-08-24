@@ -75,12 +75,18 @@ app.get('/user_inventory/search', async (req, res) => {
     try {
         // const matchingBooks = await BookModel.find({ title: { $regex: req.body.title, $options: "i" }})
 
-        // Search for books based on title or author using a regular expression
+        const searchBy = []
+        if (req.body.title) {
+            searchBy.push({ title: { $regex: req.body.title, $options: "i" } })
+        }
+
+        if (req.body.author) {
+            searchBy.push({ author: { $regex: req.body.author, $options: "i" } })
+        }
+
+        // Search for books based on title and author using a regular expression
         const matchingBooks = await BookModel.find({ 
-            $or: [
-                { title: { $regex: req.body.title, $options: "i" } }, // Case-insensitive search
-                { author: { $regex: req.body.author, $options: "i" } } // Case-insensitive search
-            ]
+            $and: searchBy
         })
 
         // Retrieve user/book pairs from user_inventory collection using matching book ids

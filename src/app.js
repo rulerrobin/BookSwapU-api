@@ -1,5 +1,5 @@
 import express from "express"
-// import { UserModel, BookModel, UserInventoryModel, MessageModel, dbClose } from "./db.js"
+// import { UserModel, BookModel, UserInventoryModel, ChatModel, dbClose } from "./db.js"
 import cors from 'cors'
 import chats from './data/data.js'
 

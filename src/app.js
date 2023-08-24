@@ -1,6 +1,7 @@
 import express from "express"
 import { UserModel, BookModel, UserInventoryModel, MessageModel, dbClose } from "./db.js"
 import cors from 'cors'
+import chats from './data/data.js'
 
 const app = express()
 
@@ -102,5 +103,16 @@ app.get('/user_inventory/search', async (req, res) => {
 })
 
 app.get('/messages', async (req, res) => res.send(await MessageModel.find()))
+
+// Testing Chat API
+app.get('/api/chat', (req, res) => {
+   res.send(chats)
+})
+
+app.get('/api/chat/:id', (req, res) => {
+//  console.log(req.params.id)
+   const singleChat = chats.find( c => c._id === req.params.id);
+   res.send(singleChat)
+})
 
 export default app

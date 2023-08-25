@@ -3,6 +3,7 @@ import { UserModel, BookModel, UserInventoryModel, ChatModel, MessageModel, dbCl
 import cors from 'cors'
 import chats from './data/data.js'
 import userRoutes from './userRoutes.js'
+import { notFound, errorHandler } from './middleware/errorMiddleware.js'
 
 const app = express()
 
@@ -22,6 +23,10 @@ app.get('/users', async (req, res) => res.send(await UserModel.find()))
 
 // Gets routes from userRoutes.js
 app.use('/api/user', userRoutes)
+
+// User error handlers
+app.use(notFound)
+app.use(errorHandler)
 
 // GET method request handler which returns the books associated with 
 // a given user.

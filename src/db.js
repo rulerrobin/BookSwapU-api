@@ -1,6 +1,7 @@
 // Import required modules
 import mongoose from 'mongoose'
 import dotenv from 'dotenv'
+import bcrypt from 'bcrypt'
 
 // Load environment variables from .env file
 dotenv.config()
@@ -32,6 +33,20 @@ const userSchema = new mongoose.Schema({
     timesamps: true 
   }
 )
+
+userSchema.methods.matchPassword=async function (enteredPassword) {
+  return await bcrypt.compare(enteredPassword, this.password)
+}
+
+// Before saving complete function (encrypt password)
+userSchema.pre('save', async function (next) {
+  if(!this.isModified) {
+    next()
+  }
+  // encryption processing rounds 2^10
+  const salt = await bcrypt.genSalt(10)
+  this.password = await bcrypt.hash(this.password, salt)
+})
 
 // Create a User model from the defined schema
 const UserModel = mongoose.model('User', userSchema)

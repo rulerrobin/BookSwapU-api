@@ -70,10 +70,10 @@ app.get('/users', async (req, res) => res.send(await UserModel.find()))
 //         res.status(500).send({ error: err.message })
 //     }
 // })
-app.use('/api/user', userRoutes)
+
 
 // Gets routes from userRoutes.js
-
+app.use('/api/user', userRoutes)
 
 // GET method request handler which returns the books associated with 
 // a given user.

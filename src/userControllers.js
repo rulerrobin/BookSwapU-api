@@ -1,22 +1,24 @@
 import asyncHandler from 'express-async-handler'
+import generateToken from './generateToken.js'
+import { UserModel } from './db.js'
 
 const registerUser = asyncHandler(async (req, res) => {
-   const { name, email, password, pic } = req.body
+   const { username, email, password, pic } = req.body
 
-   if (!name || !email || !password) {
+   if (!username || !email || !password) {
       res.status(400)
       throw new Error("Please enter a all required fields")
    }
 
-   const userExists = await User.findOne()
+   const userExists = await UserModel.findOne({ email })
 
    if (userExists) {
       res.status(400)
       throw new Error("User already exists")
    }
 
-   const user = await User.create({
-      name,
+   const user = await UserModel.create({
+      username,
       email,
       password,
       pic,
@@ -25,7 +27,7 @@ const registerUser = asyncHandler(async (req, res) => {
    if (user) {
       res.status(201).json({
          _id: user._id,
-         name: user.name,
+         username: user.username,
          email: user.email,
          pic: user.pic,
          token: generateToken(user._id),
@@ -36,4 +38,23 @@ const registerUser = asyncHandler(async (req, res) => {
    }
 })
 
-export default registerUser
+const authUser = asyncHandler(async (req, res) => {
+   const { email, password } = req.body
+
+   const user = await UserModel.findOne({ email })
+
+   if ( user && (await user.matchPassword(password))) {
+      res.json({
+         _id: user._id,
+         username: user.username,
+         email: user.email,
+         pic: user.pic,
+         token: generateToken(user._id),
+   })
+   } else {
+   res.status(401)
+   throw new Error("Invalid Email or Password")
+}
+})
+
+export { registerUser, authUser }

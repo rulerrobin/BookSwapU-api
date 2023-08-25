@@ -13,6 +13,9 @@ app.use(cors())
 
 app.use(express.json())
 
+// Gets routes from userRoutes.js
+app.use('/api/user', userRoutes)
+
 // GET method default route handler.
 app.get('/', (request, response) => response.send({ info: 'BookSwapU API!' }))
 
@@ -20,13 +23,6 @@ app.get('/', (request, response) => response.send({ info: 'BookSwapU API!' }))
 
 // GET method request handler for retrieving all users data.
 app.get('/users', async (req, res) => res.send(await UserModel.find()))
-
-// Gets routes from userRoutes.js
-app.use('/api/user', userRoutes)
-
-// User error handlers
-app.use(notFound)
-app.use(errorHandler)
 
 // GET method request handler which returns the books associated with 
 // a given user.
@@ -170,5 +166,9 @@ app.get('/api/chat/:id', (req, res) => {
    const singleChat = chats.find( c => c._id === req.params.id);
    res.send(singleChat)
 })
+
+// User error handlers
+app.use(notFound)
+app.use(errorHandler)
 
 export default app

@@ -11,6 +11,7 @@ async function dbClose() {
   console.log('Database disconnected')
 }
 
+// console.log(process.env.ATLAS_DB_URL) // debug test to see what process.env.ATLAS_DB_URL finds
 // Connect to the MongoDB database using the provided Atlas URL
 mongoose.connect(process.env.ATLAS_DB_URL)
   .then(m => console.log(m.connection.readyState === 1 ? 'Mongoose connected!' : 'Mongoose failed to connect'))
@@ -23,7 +24,6 @@ const userSchema = new mongoose.Schema({
   password: { type: String, required: true },
   pic: {
     type: String,
-    required: true,
     default:
       'https://icon-library.com/images/anonymous-avatar-icon/anonymous-avatar-icon-25.jpg'
     },

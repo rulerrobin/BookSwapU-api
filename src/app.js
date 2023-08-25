@@ -1,7 +1,8 @@
 import express from "express"
-// import { UserModel, BookModel, UserInventoryModel, ChatModel, dbClose } from "./db.js"
+import { UserModel, BookModel, UserInventoryModel, ChatModel, MessageModel, dbClose  } from "./db.js"
 import cors from 'cors'
 import chats from './data/data.js'
+import userRoutes from './userRoutes.js'
 
 const app = express()
 
@@ -19,60 +20,60 @@ app.get('/', (request, response) => response.send({ info: 'BookSwapU API!' }))
 // GET method request handler for retrieving all users data.
 app.get('/users', async (req, res) => res.send(await UserModel.find()))
 
-// GET method request handler for retrieving a single user based on their '_id' in the users collection.
-app.get('/users/:user_id', async (req, res) => res.send(await UserModel.findById(req.params.user_id)))
+// // POST method request handler which allows
+// app.post('/users/register', async (req, res) => {
+//     try {
+//         console.log(req.body)
+//         const insertedUser = await UserModel.create(req.body)
+//         res.status(201).send(insertedUser)
+//     }
+//     catch (err) {
+//         res.status(500).send({ error: err.message })
+//     }
+// })
 
-// POST method request handler which allows
-app.post('/users/register', async (req, res) => {
-    try {
-        const insertedUser = await UserModel.create(req.body)
-        res.status(201).send(insertedUser)
-    }
-    catch (err) {
-        res.status(500).send({ error: err.message })
-    }
-})
+// // POST method request handler for submitting login info for user authentication
+// app.post('/users/login', async (req, res) => {
+//     try {
+//         let user = {}
+//         if ('username' in req.body) {
+//             user = await UserModel.findOne({ username: req.body.username })
+//         }
+//         else if ('email' in req.body) {
+//             user = await UserModel.findOne({ email: req.body.email })
+//         }
+//         else {
+//             res.status(400).send({ error: 'Username and/or email not found' })
+//             return
+//         }
 
-// POST method request handler for submitting login info for user authentication
-app.post('/users/login', async (req, res) => {
-    try {
-        let user = {}
-        if ('username' in req.body) {
-            user = await UserModel.findOne({ username: req.body.username })
-        }
-        else if ('email' in req.body) {
-            user = await UserModel.findOne({ email: req.body.email })
-        }
-        else {
-            res.status(400).send({ error: 'Username and/or email not found' })
-            return
-        }
+//         if (!user)
+//         {
+//             res.status(403).send({ error: 'Incorrect login details' })
+//             return
+//         }
 
-        if (!user)
-        {
-            res.status(403).send({ error: 'Incorrect login details' })
-            return
-        }
+//         if ('password' in req.body) {
+//             if (req.body.password === user.password)
+//                 res.status(201).send(user)
+//             else {
+//                 res.status(403).send({ error: 'Incorrect login details' })
+//                 return
+//             }
+//         }
+//         else {
+//             res.status(400).send({ error: 'Password not supplied' })
+//             return
+//         }
+//     }
+//     catch (err) {
+//         res.status(500).send({ error: err.message })
+//     }
+// })
+app.use('/api/user', userRoutes)
 
-        if ('password' in req.body) {
-            if (req.body.password === user.password)
-                res.status(201).send(user)
-            else {
-                res.status(403).send({ error: 'Incorrect login details' })
-                return
-            }
-        }
-        else {
-            res.status(400).send({ error: 'Password not supplied' })
-            return
-        }
-    }
-    catch (err) {
-        res.status(500).send({ error: err.message })
-    }
-})
+// Gets routes from userRoutes.js
 
-// CRUD request handlers for managing books.
 
 // GET method request handler which returns the books associated with 
 // a given user.

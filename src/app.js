@@ -2,6 +2,8 @@ import express from "express"
 import { UserModel, BookModel, UserInventoryModel, MessageModel, dbClose } from "./db.js"
 import cors from 'cors'
 import chats from './data/data.js'
+import userRoutes from './userRoutes.js'
+import { notFound, errorHandler } from './middleware/errorMiddleware.js'
 
 const app = express()
 

@@ -1,9 +1,7 @@
 import express from "express"
-import { UserModel, BookModel, UserInventoryModel, ChatModel, MessageModel, dbClose  } from "./db.js"
+import { UserModel, BookModel, UserInventoryModel, MessageModel, dbClose } from "./db.js"
 import cors from 'cors'
 import chats from './data/data.js'
-import userRoutes from './userRoutes.js'
-import { notFound, errorHandler } from './middleware/errorMiddleware.js'
 
 const app = express()
 
@@ -24,8 +22,8 @@ app.get('/', (request, response) => response.send({ info: 'BookSwapU API!' }))
 // GET method request handler for retrieving all users data.
 app.get('/users', async (req, res) => res.send(await UserModel.find()))
 
-// Gets routes from userRoutes.js
-app.use('/api/user', userRoutes)
+// GET method request handler for retrieving a single user based on their '_id' in the users collection.
+app.get('/users/:user_id', async (req, res) => res.send(await UserModel.findById(req.params.user_id)))
 
 // PUT method request handler for updating the current user's details (Profile).
 // Note: When there is a password change, the property 'old_password' has to be 
@@ -71,43 +69,49 @@ app.put('/users/:user_id', async (req,  res) => {
     }
 })
 
-// PUT method request handler for updating the current user's details (Profile).
-// Note: When there is a password change, the property 'old_password' has to be 
-// provided in the json request body and it has to match the password on record for the
-// update to task place.
-app.put('/users/:user_id', async (req,  res) => {
+// POST method request handler which allows
+app.post('/users/register', async (req, res) => {
     try {
-        // Get the current user
-        const currentUser = await UserModel.findById(req.params.user_id)
+        const insertedUser = await UserModel.create(req.body)
+        res.status(201).send(insertedUser)
+    }
+    catch (err) {
+        res.status(500).send({ error: err.message })
+    }
+})
 
-        // Create a separate user object for update
-        let userDetails = { username: req.body.username, email: req.body.email }
-
-        // If password property exists in request body
-        if (req.body.password) {
-            // If password in request body is the same as password on record
-            if (req.body.password === currentUser.password) {
-                userDetails.password = req.body.password
-            }
-            else {  // If 'old_password' property is the same as password on record
-                if (req.body.old_password === currentUser.password) {
-                    userDetails.password = req.body.password
-                }
-                else {
-                    res.status(404).send({ error: 'Old password is not on record'})
-                    return
-                }
-            }
+// POST method request handler for submitting login info for user authentication
+app.post('/users/login', async (req, res) => {
+    try {
+        let user = {}
+        if ('username' in req.body) {
+            user = await UserModel.findOne({ username: req.body.username })
         }
-
-        // Update the user with new details
-        const updatedUser = await UserModel.findByIdAndUpdate(req.params.user_id, userDetails, { new: true })
-
-        if (updatedUser) {
-            res.status(201).send(updatedUser)
+        else if ('email' in req.body) {
+            user = await UserModel.findOne({ email: req.body.email })
         }
         else {
-            res.status(404).send({ error: 'User not found' })
+            res.status(400).send({ error: 'Username and/or email not found' })
+            return
+        }
+
+        if (!user)
+        {
+            res.status(403).send({ error: 'Incorrect login details' })
+            return
+        }
+
+        if ('password' in req.body) {
+            if (req.body.password === user.password)
+                res.status(201).send(user)
+            else {
+                res.status(403).send({ error: 'Incorrect login details' })
+                return
+            }
+        }
+        else {
+            res.status(400).send({ error: 'Password not supplied' })
+            return
         }
     }
     catch (err) {
@@ -115,53 +119,7 @@ app.put('/users/:user_id', async (req,  res) => {
     }
 })
 
-// PUT method request handler for updating the current user's details (Profile).
-// Note: When there is a password change, the property 'old_password' has to be 
-// provided in the json request body and it has to match the password on record for the
-// update to task place.
-app.put('/users/:user_id', async (req,  res) => {
-    try {
-        // Get the current user
-        const currentUser = await UserModel.findById(req.params.user_id)
-
-        // Create a separate user object for update
-        let userDetails = { username: req.body.username, email: req.body.email }
-
-        // If password property exists in request body
-        if (req.body.password) {
-            // If password in request body is the same as password on record
-            if (req.body.password === currentUser.password) {
-                userDetails.password = req.body.password
-            }
-            else {  // If 'old_password' property is the same as password on record
-                if (req.body.old_password === currentUser.password) {
-                    userDetails.password = req.body.password
-                }
-                else {
-                    res.status(404).send({ error: 'Old password is not on record'})
-                    return
-                }
-            }
-        }
-
-        // Update the user with new details
-        const updatedUser = await UserModel.findByIdAndUpdate(req.params.user_id, userDetails, { new: true })
-
-        if (updatedUser) {
-            res.status(201).send(updatedUser)
-        }
-        else {
-            res.status(404).send({ error: 'User not found' })
-        }
-    }
-    catch (err) {
-        res.status(500).send({ error: err.message })
-    }
-})
-
-// User error handlers
-app.use(notFound)
-app.use(errorHandler)
+// CRUD request handlers for managing books.
 
 // GET method request handler which returns the books associated with 
 // a given user.

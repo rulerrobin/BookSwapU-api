@@ -25,7 +25,21 @@ app.get('/', (request, response) => response.send({ info: 'BookSwapU API!' }))
 app.get('/users', async (req, res) => res.send(await UserModel.find()))
 
 // GET method request handler for retrieving a single user based on their '_id' in the users collection.
-app.get('/users/:user_id', async (req, res) => res.send(await UserModel.findById(req.params.user_id)))
+app.get('/users/:user_id', async (req,  res) => {
+    try {
+        const user = await UserModel.findById(req.params.user_id)
+
+        if (user) {
+            res.status(201).send(user)
+        }
+        else {
+            res.status(404).send({ error: 'User not found' })
+        }
+    }
+    catch (err) {
+        res.status(500).send({ error: err.message })
+    }
+})
 
 // PUT method request handler for updating the current user's details (Profile).
 // Note: When there is a password change, the property 'old_password' has to be 

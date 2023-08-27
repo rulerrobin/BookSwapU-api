@@ -13,4 +13,4 @@ router.route('/').post(registerUser)
 router.route('/login').post(authUser)
 
 // Export the router instance to be used in other parts of the application
-export default router
+export default router 

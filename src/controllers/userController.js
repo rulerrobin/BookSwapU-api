@@ -1,5 +1,4 @@
 import asyncHandler from 'express-async-handler'
-import generateToken from '../generateToken.js'
 import { UserModel } from "../db.js"
 
 // GET method request handler for retrieving all users data.
@@ -66,54 +65,4 @@ const updateUserDetails = asyncHandler(async (req,  res) => {
     }
 })
 
-// POST method request handler which allows
-const registerUser = asyncHandler(async (req, res) => {
-    try {
-        const insertedUser = await UserModel.create(req.body)
-        res.status(201).send(insertedUser)
-    }
-    catch (err) {
-        res.status(500).send({ error: err.message })
-    }
-})
-
-// POST method request handler for submitting login info for user authentication
-const login = asyncHandler(async (req, res) => {
-    try {
-        let user = {}
-        if ('username' in req.body) {
-            user = await UserModel.findOne({ username: req.body.username })
-        }
-        else if ('email' in req.body) {
-            user = await UserModel.findOne({ email: req.body.email })
-        }
-        else {
-            res.status(400).send({ error: 'Username and/or email not found' })
-            return
-        }
-
-        if (!user)
-        {
-            res.status(403).send({ error: 'Incorrect login details' })
-            return
-        }
-
-        if ('password' in req.body) {
-            if (req.body.password === user.password)
-                res.status(201).send(user)
-            else {
-                res.status(403).send({ error: 'Incorrect login details' })
-                return
-            }
-        }
-        else {
-            res.status(400).send({ error: 'Password not supplied' })
-            return
-        }
-    }
-    catch (err) {
-        res.status(500).send({ error: err.message })
-    }
-})
-
-export { getAllUsers, getOneUser, updateUserDetails, registerUser, login }
+export { getAllUsers, getOneUser, updateUserDetails }

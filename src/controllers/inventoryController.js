@@ -1,5 +1,4 @@
 import asyncHandler from 'express-async-handler'
-import generateToken from '../generateToken.js'
 import { BookModel, UserInventoryModel } from "../db.js"
 
 // GET method request handler which returns the entire contents of 'UserInventoryModel'.

@@ -4,12 +4,12 @@ import { UserModel } from '../models/userModel.js'
 
 // Handler to register a new user
 const registerUser = asyncHandler(async (req, res) => {
-   const { username, email, password, pic } = req.body
+   const { username, email, password } = req.body
 
    // Check if required fields are provided
    if (!username || !email || !password) {
       res.status(400)
-      throw new Error("Please enter a all required fields")
+      throw new Error("Please enter all required fields")
    }
 
    // Check if user with the same email already exists
@@ -25,7 +25,6 @@ const registerUser = asyncHandler(async (req, res) => {
       username,
       email,
       password,
-      pic,
    })
 
    // Return user information and token upon successful registration
@@ -34,7 +33,6 @@ const registerUser = asyncHandler(async (req, res) => {
          _id: user._id,
          username: user.username,
          email: user.email,
-         pic: user.pic,
          token: generateToken(user._id),
       })
    } else {
@@ -56,7 +54,6 @@ const authUser = asyncHandler(async (req, res) => {
          _id: user._id,
          username: user.username,
          email: user.email,
-         pic: user.pic,
          token: generateToken(user._id),
    })
    } else {

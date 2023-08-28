@@ -23,5 +23,5 @@ function verifyToken(req, res, next) {
    });
  }
  
- // Export the 'generateToken' function to be used in other parts of the application
+ // Export the 'verifyToken' function to be used in other parts of the application
 export default verifyToken

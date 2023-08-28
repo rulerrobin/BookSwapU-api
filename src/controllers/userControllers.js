@@ -62,4 +62,19 @@ const authUser = asyncHandler(async (req, res) => {
 }
 })
 
-export { registerUser, authUser }
+// Search user's for chat /api/user?search=name
+const getChatUsers = asyncHandler(async (req, res) => {
+   const keyword = req.query.search ? {
+      $or: [
+         // search for name and email | i means case sensitive
+         { name: { $regex: req.query.search, $options: "i" } },
+         { email: { $regex: req.query.search, $options: "i" } },
+      ]
+   }:{}
+   // Return users without the user that is not equal to logged in
+   const users = await UserModel.find(keyword).find({_id:{ $ne: req.user._id} })
+   res.send(users)
+   // console.log(keyword)
+})
+
+export { registerUser, authUser, getChatUsers }

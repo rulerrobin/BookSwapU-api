@@ -1,7 +1,7 @@
 // Import the 'express' module for creating a router
 import express from "express"
 // Import the 'registerUser' and 'authUser' functions from 'userControllers.js'
-import { registerUser, authUser }  from './controllers/userControllers.js'
+import { registerUser, authUser }  from '../controllers/userControllers.js'
 // Create an instance of an Express Router
 const router = express.Router()
 // Define routes and their corresponding HTTP methods

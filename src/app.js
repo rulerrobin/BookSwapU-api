@@ -1,11 +1,11 @@
 import express from "express"
-import { MessageModel } from "./db.js"
+import { db } from "./database/db.js"
 import cors from 'cors'
 import chats from './data/data.js'
-import userRoutes from './userRoutes.js'
+import userRoutes from './routes/userRoutes.js'
 import { notFound, errorHandler } from './middleware/errorMiddleware.js'
 
-import verifyToken from "./verifyToken.js"
+import verifyToken from "./middleware/verifyToken.js"
 import authRouter from './routes/authRouter.js'
 import userRouter from './routes/userRouter.js'
 import bookRouter from './routes/bookRouter.js'
@@ -37,7 +37,7 @@ app.use('/', bookRouter)
 app.use('/', inventoryRouter)
 
 // GET method for retrieving all the messages exhanged between all users.
-app.get('/messages', async (req, res) => res.send(await MessageModel.find()))
+// app.get('/messages', async (req, res) => res.send(await MessageModel.find()))
 
 // Testing Chat API
 app.get('/api/chat', (req, res) => {

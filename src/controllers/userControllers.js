@@ -1,6 +1,6 @@
 import asyncHandler from 'express-async-handler'
-import generateToken from '../generateToken.js'
-import { UserModel } from '../db.js'
+import generateToken from '../utils/generateToken.js'
+import { UserModel } from '../models/userModel.js'
 
 // Handler to register a new user
 const registerUser = asyncHandler(async (req, res) => {

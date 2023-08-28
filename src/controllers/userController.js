@@ -1,5 +1,5 @@
 import asyncHandler from 'express-async-handler'
-import { UserModel } from "../db.js"
+import { UserModel } from "../models/userModel.js"
 
 // GET method request handler for retrieving all users data.
 const getAllUsers = asyncHandler(async (req, res) => res.send(await UserModel.find()))

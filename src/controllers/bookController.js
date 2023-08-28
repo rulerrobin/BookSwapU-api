@@ -1,5 +1,6 @@
 import asyncHandler from 'express-async-handler'
-import { BookModel, UserInventoryModel } from "../db.js"
+import { BookModel } from "../models/bookModel.js"
+import { UserInventoryModel } from "../models/userInventoryModel.js"
 
 // GET method request handler which returns the books associated with 
 // a given user.

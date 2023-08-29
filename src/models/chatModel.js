@@ -1,24 +1,23 @@
 import mongoose from 'mongoose'
 
 // Define a schema for the Chat model
-const chatSchema = new mongoose.Schema({
-    users: [{
+const chatSchema = new mongoose.Schema(
+  {
+    chatName: { type: String, trim: true },
+
+    users: [
+      {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User',
-    }],
+      }
+    ],
     latestMessage: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Message"
     },
-    chatname: { type: String, trim: true },
-    // sender: { type: mongoose.ObjectId, ref: 'User', required: true },
-    // receiver: { type: mongoose.ObjectId, ref: 'User', required: true },
-    // content: { type: String, required: true },
-    },
-    {
-      timestamps: true,
-    }
-  )
+  },
+  { timestamps: true },
+)
   
   // Create a Chat model from the defined schema
   const ChatModel = mongoose.model('Chat', chatSchema)

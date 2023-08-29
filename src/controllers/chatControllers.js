@@ -53,7 +53,6 @@ const accessChat = AsyncHandler(async (req, res) => {
          }
 })
 
-<<<<<<< HEAD
 const fetchChats = AsyncHandler(async (req, res,) => {
    try {
       ChatModel.find({ users: { $elemMatch: { $eq: req.user._id} } })
@@ -74,6 +73,3 @@ const fetchChats = AsyncHandler(async (req, res,) => {
    }
 })
 export { accessChat, fetchChats }
-=======
-export default accessChat
->>>>>>> d35752c (api created for one on one chat)

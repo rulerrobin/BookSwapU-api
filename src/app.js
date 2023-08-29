@@ -3,6 +3,7 @@ import { db } from "./database/db.js"
 import cors from 'cors'
 import chats from './data/data.js'
 import userRoutes from './routes/userRoutes.js'
+import chatRoutes from './routes/chatRoutes.js'
 import { notFound, errorHandler } from './middleware/errorMiddleware.js'
 
 import verifyToken from "./middleware/verifyToken.js"
@@ -21,7 +22,7 @@ app.use(express.json())
 
 // Gets routes from userRoutes.js
 app.use('/api/user', userRoutes)
-// app.use('/api/chat', chatRoutes)
+app.use('/api/chat', chatRoutes)
 
 // GET method default route handler.
 app.get('/', (request, response) => response.send({ info: 'BookSwapU API!' }))

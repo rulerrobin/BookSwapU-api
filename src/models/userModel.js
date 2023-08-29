@@ -18,12 +18,12 @@ const userSchema = new mongoose.Schema({
   
   // Before saving complete function (encrypt password)
   userSchema.pre('save', async function (next) {
-    if(!this.isModified) {
-      next()
+      if (this.isModified('password')) { // Check if the password field is modified
+        const salt = await bcrypt.genSalt(10)
+        this.password = await bcrypt.hash(this.password, salt)
     }
-    // encryption processing rounds 2^10
-    const salt = await bcrypt.genSalt(10)
-    this.password = await bcrypt.hash(this.password, salt)
+
+    next()
   })
   
   // Create a User model from the defined schema

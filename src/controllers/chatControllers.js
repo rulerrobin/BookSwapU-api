@@ -6,22 +6,25 @@ import { UserModel } from '../models/userModel.js'
 const accessChat = AsyncHandler(async (req, res) => {
    const { userId } = req.body
 
+   // Check if userId is provided
    if (!userId) {
       console.log("UserID param not sent with request")
       return res.sendStatus(400)
    }
 
+      // Check if a chat exists between logged-in user and target user
       var isChat = await ChatModel.find({
          $and: [
             { users: { $elemMatch: { $eq:req.user._id } } },
             { users: { $elemMatch: { $eq: userId } } },
          ]
       }).populate('users', '-password')
-            .populate('latestMessage')
+         .populate('latestMessage')
 
          // console.log(req.user._id)
          // console.log(userId)
 
+         // Populate sender details for latest messages
          isChat = await UserModel.populate(isChat, {
             path: 'latestMessage.sender',
             select: "name email",
@@ -31,6 +34,7 @@ const accessChat = AsyncHandler(async (req, res) => {
             res.send(isChat[0])
 
          } else {
+            // Create a new chat
             var chatData = {
                chatName: "sender",
                users: [req.user._id, userId],
@@ -53,6 +57,7 @@ const accessChat = AsyncHandler(async (req, res) => {
          }
 })
 
+// Fetch chats for logged-in user
 const fetchChats = AsyncHandler(async (req, res,) => {
    try {
       ChatModel.find({ users: { $elemMatch: { $eq: req.user._id} } })
@@ -60,6 +65,7 @@ const fetchChats = AsyncHandler(async (req, res,) => {
          .populate("latestMessage")
          .sort({updatedAt: -1})
          .then(async (results)=> {
+            // Populate sender details for latest messages
             results = await UserModel.populate(results, {
                path: "latestMessage.sender",
                select: "name email"

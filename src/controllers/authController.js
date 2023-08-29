@@ -6,7 +6,12 @@ import { UserModel } from "../models/userModel.js"
 const registerUser = asyncHandler(async (req, res) => {
     try {
         const insertedUser = await UserModel.create(req.body)
-        res.status(201).send(insertedUser)
+
+        if (insertedUser) {
+            res.status(201).send(insertedUser)
+        } else {
+            res.status(400).send({ error: 'Unable to create user' })
+        }
     }
     catch (err) {
         res.status(500).send({ error: err.message })

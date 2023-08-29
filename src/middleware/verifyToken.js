@@ -18,6 +18,8 @@ function verifyToken(req, res, next) {
          return res.status(401).json({ message: 'Invalid token' });
       }
 
+      // Inserting user info into request before call to next() so 
+      // it can be accessed by the route controller.
       req.user = decoded;
       next();
    });

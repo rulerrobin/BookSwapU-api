@@ -1,5 +1,9 @@
 // Import required models and dbClose function from the "./db.js" module
-import { UserModel, BookModel, UserInventoryModel, MessageModel, dbClose } from "./db.js"
+import { dbClose } from "./db.js"
+import { UserModel } from "../models/userModel.js"
+import { BookModel } from "../models/bookModel.js"
+import { UserInventoryModel } from "../models/userInventoryModel.js"
+import { MessageModel } from "../models/chatModel.js"
 
 // Define an array of user objects with username, email, and password properties
 const users = [
@@ -16,7 +20,7 @@ await UserModel.deleteMany()
 console.log('Deleted Users')
 
 // Insert the user objects into the UserModel collection and log a message
-const userCollection = await UserModel.insertMany(users)
+const userCollection = await UserModel.create(users)
 console.log('Inserted Users')
 
 // Define an array of book objects with various properties

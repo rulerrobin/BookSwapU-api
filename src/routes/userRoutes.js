@@ -11,7 +11,7 @@ const router = express.Router()
 // Define routes and their corresponding HTTP methods
 // 'router.route()' creates a chainable route handler for the specified path
 
-// Handle POST requests to the root path ('/') by calling the 'registerUser' function
+// Handle POST requests to the root path ('/') 
 router.route('/')
    .post(registerUser)
    .get(verifyToken, getChatUsers)

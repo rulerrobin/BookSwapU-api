@@ -2,16 +2,14 @@ import asyncHandler from 'express-async-handler'
 import { BookModel } from "../models/bookModel.js"
 import { UserInventoryModel } from "../models/userInventoryModel.js"
 
-// GET method request handler which returns the entire contents of 'UserInventoryModel'.
+// GET method request controller which returns the entire contents of 'UserInventoryModel'.
 // These are the user-book mappings for every user and every book in the system.
-const getInventoryAll = asyncHandler(async (req, res) => res.send(await UserInventoryModel.find()))
+// const getInventoryAll = asyncHandler(async (req, res) => res.send(await UserInventoryModel.find()))
 
-// GET method request handler for retrieving user inventory entries based on title and/or author.
+// GET method request controller for retrieving user inventory entries based on title and/or author.
 // Uses regex's to search for partial titles and/or authors.
 const searchInventory = asyncHandler(async (req, res) => {
     try {
-        // const matchingBooks = await BookModel.find({ title: { $regex: req.body.title, $options: "i" }})
-
         const searchBy = []
         if (req.body.title) {
             searchBy.push({ title: { $regex: req.body.title, $options: "i" } })
@@ -42,5 +40,5 @@ const searchInventory = asyncHandler(async (req, res) => {
     }
 })
 
-export { getInventoryAll, searchInventory }
+export { searchInventory }
 

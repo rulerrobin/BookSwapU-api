@@ -2,12 +2,14 @@ import asyncHandler from 'express-async-handler'
 import { UserModel } from "../models/userModel.js"
 
 // GET method request handler for retrieving all users data.
-const getAllUsers = asyncHandler(async (req, res) => res.send(await UserModel.find()))
+// const getAllUsers = asyncHandler(async (req, res) => res.send(await UserModel.find()))
 
-// GET method request handler for retrieving a single user based on their '_id' in the users collection.
+// GET method request controller for retrieving the current logged in users details.
 const getOneUser = asyncHandler(async (req,  res) => {
     try {
-        const user = await UserModel.findById(req.params.user_id)
+        // Use the '_id' in the request which is drawn from the web token 
+        // of the current logged in user.
+        const user = await UserModel.findById(req.user._id)
 
         if (user) {
             res.status(201).send(user)
@@ -28,7 +30,8 @@ const getOneUser = asyncHandler(async (req,  res) => {
 const updateUserDetails = asyncHandler(async (req,  res) => {
     try {
         // Get the current user
-        const currentUser = await UserModel.findById(req.params.user_id)
+        // const currentUser = await UserModel.findById(req.params.user_id)
+        const currentUser = await UserModel.findById(req.user._id)
 
         // Create a separate user object for update
         let userDetails = { username: req.body.username, email: req.body.email }
@@ -51,7 +54,7 @@ const updateUserDetails = asyncHandler(async (req,  res) => {
         }
 
         // Update the user with new details
-        const updatedUser = await UserModel.findByIdAndUpdate(req.params.user_id, userDetails, { new: true })
+        const updatedUser = await UserModel.findByIdAndUpdate(req.user._id, userDetails, { new: true })
 
         if (updatedUser) {
             res.status(201).send(updatedUser)
@@ -65,4 +68,4 @@ const updateUserDetails = asyncHandler(async (req,  res) => {
     }
 })
 
-export { getAllUsers, getOneUser, updateUserDetails }
+export { getOneUser, updateUserDetails }

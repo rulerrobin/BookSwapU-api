@@ -19,9 +19,10 @@ function verifyToken(req, res, next) {
       }
 
       req.user = decoded;
+      console.log(req.user)
       next();
    });
  }
  
- // Export the 'generateToken' function to be used in other parts of the application
+ // Export the 'verifyToken' function to be used in other parts of the application
 export default verifyToken

@@ -21,6 +21,7 @@ app.use(express.json())
 
 // Gets routes from userRoutes.js
 app.use('/api/user', userRoutes)
+// app.use('/api/chat', chatRoutes)
 
 // GET method default route handler.
 app.get('/', (request, response) => response.send({ info: 'BookSwapU API!' }))

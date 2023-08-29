@@ -21,6 +21,7 @@ function verifyToken(req, res, next) {
       // Inserting user info into request before call to next() so 
       // it can be accessed by the route controller.
       req.user = decoded;
+      // console.log(req.user)
       next();
    });
  }

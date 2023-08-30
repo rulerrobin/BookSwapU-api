@@ -12,6 +12,8 @@ import userRouter from './routes/userRouter.js'
 import bookRouter from './routes/bookRouter.js'
 import inventoryRouter from './routes/inventoryRouter.js'
 
+const baseURI = '/'
+
 const app = express()
 
 // Allows anyone to connect by default (good for development but not production)
@@ -28,18 +30,15 @@ app.use('/api/chat', chatRoutes)
 app.get('/', (request, response) => response.send({ info: 'BookSwapU API!' }))
 
 // Contains the routes for authorization & jwt authentication
-app.use('/', authRouter)
+app.use(baseURI, authRouter)
 
 // Verifies JSON Web token before performing any CRUD operations
 app.use(verifyToken)
 
 // Load the main CRUD routes for the application
-app.use('/', userRouter)
-app.use('/', bookRouter)
-app.use('/', inventoryRouter)
-
-// GET method for retrieving all the messages exhanged between all users.
-// app.get('/messages', async (req, res) => res.send(await MessageModel.find()))
+app.use(baseURI, userRouter)
+app.use(baseURI, bookRouter)
+app.use(baseURI, inventoryRouter)
 
 // Testing Chat API
 app.get('/api/chat', (req, res) => {
@@ -52,7 +51,8 @@ app.get('/api/chat/:id', (req, res) => {
    res.send(singleChat)
 })
 
-// User error handlers
+// Error handling middleware - All exceptions are 
+// directed to these.
 app.use(notFound)
 app.use(errorHandler)
 

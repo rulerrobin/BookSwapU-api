@@ -4,72 +4,61 @@ import { UserModel } from "../models/userModel.js"
 
 // POST method request handler which allows
 const registerUser = asyncHandler(async (req, res) => {
-    try {
-        const insertedUser = await UserModel.create(req.body)
+    const { username, email, password } = req.body
 
-        if (insertedUser) {
-            res.status(201).send(insertedUser)
-        } else {
-            res.status(400).send({ error: 'Unable to create user' })
-        }
+    // Check if required fields are provided
+    if (!username || !email || !password) {
+        res.status(400)
+        throw new Error("Please enter all required fields")
     }
-    catch (err) {
-        res.status(500).send({ error: err.message })
+
+    // Check if user with the same email already exists
+    const userExists = await UserModel.findOne({ email })
+
+    if (userExists) {
+        res.status(400)
+        throw new Error("User already exists")
+    }
+
+    // Create a new user
+    const user = await UserModel.create({
+        username,
+        email,
+        password
+    })
+
+    // Return user information and token upon successful registration
+    if (user) {
+        res.status(201).json({
+            _id: user._id,
+            username: user.username,
+            email: user.email,
+            token: generateToken(user._id),
+        })
+    } else {
+        res.status(404)
+        throw new Error ("Failed to create User")
     }
 })
 
 // POST method request handler for submitting login info for user authentication
 const login = asyncHandler(async (req, res) => {
-    try {
-        let user = {}
-        if ('username' in req.body) {
-            user = await UserModel.findOne({ username: req.body.username })
-        }
-        else if ('email' in req.body) {
-            user = await UserModel.findOne({ email: req.body.email })
-        }
-        else {
-            res.status(400).send({ error: 'Username and/or email not found' })
-            return
-        }
+    const { email, password } = req.body
 
-        if (!user)
-        {
-            res.status(403).send({ error: 'Incorrect login details' })
-            return
-        }
+    // Find the user by email
+    const user = await UserModel.findOne({ email })
 
-        if ('password' in req.body) {
-            if (await user.matchPassword(req.body.password)) {
-
-                const userDetails = {
-                    _id: user._id,
-                    username: user.username,
-                    email: user.email,
-                    token: generateToken(user._id)
-                }
-
-                res.status(201).send(userDetails)
-
-            //     res.json({
-            //         _id: user._id,
-            //         username: user.username,
-            //         email: user.email,
-            //         token: generateToken(user._id)
-            //   })
-            }
-            else {
-                res.status(403).send({ error: 'Incorrect login details' })
-                return
-            }
-        }
-        else {
-            res.status(400).send({ error: 'Password not supplied' })
-            return
-        }
-    }
-    catch (err) {
-        res.status(500).send({ error: err.message })
+    // Check if user exists and the provided password matches
+    if ( user && (await user.matchPassword(password))) {
+        res.json({
+            _id: user._id,
+            username: user.username,
+            email: user.email,
+            token: generateToken(user._id),
+        })
+    } else {
+        res.status(401)
+        throw new Error("Invalid Email or Password")
     }
 })
 

@@ -7,10 +7,10 @@ import chatRoutes from './routes/chatRoutes.js'
 import { notFound, errorHandler } from './middleware/errorMiddleware.js'
 
 import verifyToken from "./middleware/verifyToken.js"
-import authRouter from './routes/authRouter.js'
-import userRouter from './routes/userRouter.js'
-import bookRouter from './routes/bookRouter.js'
-import inventoryRouter from './routes/inventoryRouter.js'
+import authRouter from './routes/authRoutes.js'
+import userRouter from './routes/userRoutes.js'
+import bookRouter from './routes/bookRoutes.js'
+import inventoryRouter from './routes/inventoryRoutes.js'
 
 const baseURI = '/'
 

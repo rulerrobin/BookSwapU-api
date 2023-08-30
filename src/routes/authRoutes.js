@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import { registerUser, login } from "../controllers/authController.js"
+import { registerUser, authUser } from "../controllers/authControllers.js"
 
 const router = Router()
 
@@ -7,7 +7,7 @@ const router = Router()
 router.post('/users/register', registerUser)
 
 // POST method request handler for submitting login info for user authentication
-router.post('/users/login', login)
+router.post('/users/login', authUser)
 
 // Export the router instance to be used in other parts of the application
 export default router

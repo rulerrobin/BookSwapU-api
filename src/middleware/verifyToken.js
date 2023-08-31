@@ -11,6 +11,7 @@ function verifyToken(req, res, next) {
 
    // Remove the word 'Bearer ' which is prepended to the token
    const credentials = token.replace(/^Bearer\s/, '')
+   // const credentials =  token?.split(" ")?.[1]
 
    jwt.verify(credentials, process.env.JWT_SECRET, (err, decoded) => {
       if (err) {

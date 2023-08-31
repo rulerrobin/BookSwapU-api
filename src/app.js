@@ -41,9 +41,9 @@ app.use(baseURI, bookRouter)
 app.use(baseURI, inventoryRouter)
 
 // Testing Chat API
-app.get('/api/chat', (req, res) => {
-   res.send(chats)
-})
+// app.get('/api/chat', (req, res) => {
+//    res.send(chats)
+// })
 
 app.get('/api/chat/:id', (req, res) => {
 //  console.log(req.params.id)

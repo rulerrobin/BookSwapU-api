@@ -78,4 +78,5 @@ const fetchChats = AsyncHandler(async (req, res,) => {
       throw new error(error.message)
    }
 })
+
 export { accessChat, fetchChats }

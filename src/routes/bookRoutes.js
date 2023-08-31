@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import { oneUsersBooks, addBookToUsersCollection,  deleteBookFromUsersCollection, getOneBook, updateBookDetails }  from '../controllers/bookController.js'
+import { oneUsersBooks, addBookToUsersCollection,  deleteBookFromUsersCollection, getOneBook, updateBookDetails }  from '../controllers/bookControllers.js'
 
 const router = Router()
 
@@ -26,14 +26,6 @@ router.put('/books/:book_id', updateBookDetails)
 // DELETE method request handler for deleting a book from a logged in 
 // users collection. Note: 2 mongodb collections are deleted from here.
 router.delete('/books/:book_id',  deleteBookFromUsersCollection)
-
-// GET method request handler which returns the entire 'book' collection
-// router.get('/books', getAllBooks)
-
-// POST method request handler allows insertion of books into the 'books' collection.
-// Note: The books are NOT associated with a user through 'UserInventoryModel'.
-// This should never be called directly. Use 'POST /users/:user_id/books' instead.
-// router.post('/books', addNewBook)
 
 // Export the router instance to be used in other parts of the application
 export default router

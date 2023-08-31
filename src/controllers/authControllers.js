@@ -42,7 +42,7 @@ const registerUser = asyncHandler(async (req, res) => {
 })
 
 // POST method request handler for submitting login info for user authentication
-const login = asyncHandler(async (req, res) => {
+const authUser = asyncHandler(async (req, res) => {
     const { email, password } = req.body
 
     // Find the user by email
@@ -62,4 +62,4 @@ const login = asyncHandler(async (req, res) => {
     }
 })
 
-export { registerUser, login }
+export { registerUser, authUser }

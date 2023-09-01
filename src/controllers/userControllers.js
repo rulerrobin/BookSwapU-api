@@ -1,4 +1,5 @@
 import asyncHandler from 'express-async-handler'
+import bcrypt from 'bcrypt'
 import { UserModel } from "../models/userModel.js"
 
 // GET method request controller for retrieving the current logged in users details.
@@ -27,31 +28,38 @@ const updateUserDetails = asyncHandler(async (req,  res) => {
         throw new Error('User not found')
     }
 
-    // Create a separate user object for update
-    let userDetails = { username: req.body.username, email: req.body.email }
+    // Destructure elements to update
+    const { username, email, old_password, password } = req.body
 
-    // If password property exists in request body
-    if (req.body.password) {
-        // If password in request body is the same as password on record
-        if (req.body.password === currentUser.password) {
-            userDetails.password = req.body.password
+    // Update username if supplied in json request
+    if (username) {
+        currentUser.username = username
+    }
+
+    // Update email if supplied in json request
+    if (email) {
+        currentUser.email = email
+    }
+
+    // If password in request body is the same as password on record
+    if (password && !(await currentUser.matchPassword(password))) {
+        // If 'old_password' property is the same as password on record
+        if (old_password && (await currentUser.matchPassword(old_password)))
+        {
+            currentUser.password = password
         }
-        else {  // If 'old_password' property is the same as password on record
-            if (req.body.old_password === currentUser.password) {
-                userDetails.password = req.body.password
-            }
-            else {
-                res.status(404)
-                throw new Error('Old password is not on record')
-            }
+        else {
+            res.status(404)
+                throw new Error('Old password is missing or not on record')
         }
     }
 
-    // Update the logged in user with new details
-    const updatedUser = await UserModel.findByIdAndUpdate(req.user._id, userDetails, { new: true })
+    // save() has to be called explicity to trigger the pre save hook and
+    // store the password in encrypted form.
+    await currentUser.save()
 
-    if (updatedUser) {
-        res.status(201).send(updatedUser)
+    if (currentUser) {
+        res.status(201).send(currentUser)
     }
     else {
         res.status(404)

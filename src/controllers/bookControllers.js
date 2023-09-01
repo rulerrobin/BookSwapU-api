@@ -29,7 +29,7 @@ const getOneBook = asyncHandler(async (req,  res) => {
     const entry = await UserInventoryModel.findOne({ user: req.user._id, book: req.params.book_id })
         .populate('book')
 
-    if (entry) {
+        if (entry) {
         res.status(201).send(entry.book)
     }
     else {

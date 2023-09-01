@@ -4,6 +4,7 @@ import cors from 'cors'
 import chats from './data/data.js'
 import userRoutes from './routes/userRoutes.js'
 import chatRoutes from './routes/chatRoutes.js'
+import messageRoutes from './routes/messageRoutes.js'
 import { notFound, errorHandler } from './middleware/errorMiddleware.js'
 
 import verifyToken from "./middleware/verifyToken.js"
@@ -25,6 +26,7 @@ app.use(express.json())
 // Gets routes from userRoutes.js
 app.use('/api/user', userRoutes)
 app.use('/api/chat', chatRoutes)
+app.use('/api/message', messageRoutes)
 
 // GET method default route handler.
 app.get('/', (request, response) => response.send({ info: 'BookSwapU API!' }))
@@ -39,11 +41,6 @@ app.use(verifyToken)
 app.use(baseURI, userRouter)
 app.use(baseURI, bookRouter)
 app.use(baseURI, inventoryRouter)
-
-// Testing Chat API
-// app.get('/api/chat', (req, res) => {
-//    res.send(chats)
-// })
 
 app.get('/api/chat/:id', (req, res) => {
 //  console.log(req.params.id)

@@ -82,4 +82,4 @@ const getChatUsers = asyncHandler(async (req, res) => {
    // console.log(req.user._id)
 })
 
-export { registerUser, authUser, getChatUsers }
+export { updateUserDetails, getOneUser, getChatUsers }

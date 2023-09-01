@@ -4,7 +4,7 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "test": "NODE_OPTIONS=--experimental-vm-modules jest --watchAll --verbose",
+    "test": "NODE_OPTIONS=--experimental-vm-modules jest --watchAll --verbose --runInBand",
     "start": "nodemon index.js",
     "seed": "node database/seed.js"
   },

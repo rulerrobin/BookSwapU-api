@@ -1,20 +1,23 @@
 import app from '../app.js'
+import { jest } from '@jest/globals'
 import request from 'supertest'
+import { user2, setup, teardown, response } from './testData.js'
 
 let book_id
+let token
+
+beforeAll(async () => {
+    await setup(user2)
+    token = response.body.token
+})
+
+afterAll(async () => {
+    await teardown()
+})
 
 describe('GET /books', () => {
-    let response
-    let token
 
-    beforeAll(async () => {
-        response = await request(app).post("/users/login").send({
-            email: "zebra@gmail.com",
-            password: "password123"
-        })
-
-        token = response.body.token
-    })
+    jest.setTimeout(20000);
 
     test ('Get a logged in users book collection', async () => {
         let res = await request(app).get('/books').set({ Authorization: `Bearer ${token}` })
@@ -22,21 +25,11 @@ describe('GET /books', () => {
         expect(res.status).toBe(201)
         expect(res.header['content-type']).toMatch('json')
     })
-
 })
 
 describe('POST /books', () => {
-    let response
-    let token
 
-    beforeAll(async () => {
-        response = await request(app).post("/users/login").send({
-            email: "zebra@gmail.com",
-            password: "password123"
-        })
-
-        token = response.body.token
-    })
+    jest.setTimeout(20000);
 
     test ('Add new book to logged in user\'s collection', async () => {
         let res = await request(app).post('/books').send({
@@ -60,49 +53,26 @@ describe('POST /books', () => {
         {
             book_id = res.body._id
         }
-   })
+    })
 })
 
 describe('GET /books/:book_id', () => {
-    let response
-    let token
+    jest.setTimeout(20000);
 
-    beforeAll(async () => {
-        response = await request(app).post("/users/login").send({
-            email: "zebra@gmail.com",
-            password: "password123"
-        })
-
-        token = response.body.token
-    })
-
-    test ('Register User', async () => {
+    test ('Get single book for logged in user', async () => {
         let res = await request(app).get(`/books/${book_id}`).set({ Authorization: `Bearer ${token}` })
-        console.log(res.body)
-
         expect(res.status).toBe(201)
     })
 })
 
 describe('PUT /books/:book_id', () => {
-    let response
-    let token
-
-    beforeAll(async () => {
-        response = await request(app).post('/users/login').send({
-            email: "zebra@gmail.com",
-            password: "password123"
-        })
-
-        token = response.body.token
-    })
+    jest.setTimeout(20000);
 
     test ('Update book in logged in user\'s collection', async () => {
         let res = await request(app).put(`/books/${book_id}`).send({
             "title": "Dummy Title 2",
             "author": "Dummy Author 2"
         }).set({ Authorization: `Bearer ${token}` })
-        console.log(res.body)
  
         expect(res.status).toBe(201)
         expect(res.header['content-type']).toMatch('json')
@@ -115,17 +85,7 @@ describe('PUT /books/:book_id', () => {
 })
 
 describe('DELETE /books/:book_id', () => {
-    let response
-    let token
-
-    beforeAll(async () => {
-        response = await request(app).post('/users/login').send({
-            email: "zebra@gmail.com",
-            password: "password123"
-        })
-
-        token = response.body.token
-    })
+    jest.setTimeout(20000);
 
     test ('Delete Book', async () => {
         let res = await request(app).delete(`/books/${book_id}`).set({ Authorization: `Bearer ${token}` })

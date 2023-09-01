@@ -3,37 +3,34 @@ import { jest } from '@jest/globals'
 import request from 'supertest'
 import { UserModel } from "../models/userModel.js"
 
+let res
+
+afterAll(async () => {
+    let deletedUser = await UserModel.findByIdAndDelete(res.body._id)
+})
+
 describe('GET /', () => {
-    let res
-
-    beforeAll(async () => {
+    test ('Returns "info": "BookSwapU API!"', async () => {
+        
         res = await request(app).get('/')
-        console.log(res.body)
-    })
 
-    test ('Returns "info": "BookSwapU API!"', () => {
         expect(res.status).toBe(200)
         expect(res.header['content-type']).toMatch('json')
         expect(res.body.info).toBeDefined()
         expect(res.body.info).toMatch('BookSwapU API')
     })
-
 })
 
 describe('POST /users/register', () => {
-    let res
 
     jest.setTimeout(10000);
 
-    beforeAll(async () => {
+    test ('Register User', async () => {
         res = await request(app).post('/users/register').send({
             username: 'dummy',
             email: 'dummy@gmail.com',
             password: 'password123'
         })
-    })
-
-    test ('Register User', () => {
 
         expect(res.status).toBe(201)
         expect(res.header['content-type']).toMatch('json')
@@ -46,16 +43,13 @@ describe('POST /users/register', () => {
 })
 
 describe('POST /users/login', () => {
-    let res
 
-    beforeAll(async () => {
+    test ('Authorize User', async () => {
         res = await request(app).post('/users/login').send({
             email: 'dummy@gmail.com',
             password: 'password123'
         })
-    })
 
-    test ('Authorize User', () => {
         expect(res.status).toBe(200)
         expect(res.header['content-type']).toMatch('json')
         expect(res.body._id).toBeDefined()
@@ -67,9 +61,5 @@ describe('POST /users/login', () => {
         expect(res.body.email).toBe('dummy@gmail.com')
 
         expect(res.body.token).toBeDefined()
-    })
-
-    afterAll(async () => {
-        let deletedUser = await UserModel.findByIdAndDelete(res.body._id)
     })
 })

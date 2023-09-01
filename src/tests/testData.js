@@ -4,13 +4,29 @@ import { UserModel } from "../models/userModel.js"
 import { BookModel } from "../models/bookModel.js"
 import { UserInventoryModel } from "../models/userInventoryModel.js"
 
-const sampleUser = {
-    username: "dummy",
-    email: "dummy@gmail.com",
+const user1 = {
+    username: "dummy1",
+    email: "dummy1@gmail.com",
     password: "password123"
 }
 
-const { username, ...sampleLogin } = sampleUser
+const user2 = {
+    username: "dummy2",
+    email: "dummy2@gmail.com",
+    password: "password123"
+}
+
+const user3 = {
+    username: "dummy3",
+    email: "dummy3@gmail.com",
+    password: "password123"
+}
+
+const user4 = {
+    username: "dummy4",
+    email: "dummy4@gmail.com",
+    password: "password123"
+}
 
 const sampleBooks = [
     {
@@ -53,7 +69,17 @@ let insertedBooks
 let insertedInventoryItems
 let bookIds
 
-const setup = async () => {
+const createSampleUser = async (user) => {
+    insertedUser = await UserModel.create(user)
+    const { username, ...sampleLogin } = user
+    response = await request(app).post("/users/login").send(sampleLogin)
+}
+
+const deleteSampleUser = async () => {
+    const deletedUser = await UserModel.findByIdAndDelete(insertedUser._id)
+}
+
+const setup = async (sampleUser) => {
     insertedUser = await UserModel.create(sampleUser)
 
     insertedBooks = await BookModel.create(sampleBooks)
@@ -67,6 +93,7 @@ const setup = async () => {
 
     insertedInventoryItems = await UserInventoryModel.create(sampleInventoryItems)
 
+    const { username, ...sampleLogin } = sampleUser
     response = await request(app).post("/users/login").send(sampleLogin)
 }
 
@@ -76,4 +103,4 @@ const teardown = async () => {
     const deletedUser = await UserModel.findByIdAndDelete(insertedUser._id)
 }
 
-export { sampleUser, sampleLogin, sampleBooks, setup, teardown, response }
+export { user1, user2, user3, user4, setup, teardown, createSampleUser, deleteSampleUser, response }

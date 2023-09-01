@@ -70,7 +70,6 @@ const fetchChats = AsyncHandler(async (req, res,) => {
                path: "latestMessage.sender",
                select: "name email"
             })
-
             res.status(200).send(results)
          })
    } catch (error) {

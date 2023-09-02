@@ -69,16 +69,21 @@ let insertedBooks
 let insertedInventoryItems
 let bookIds
 
+// Insert a sample user into db. Log in using that user to 
+// produce a web token.
 const createSampleUser = async (user) => {
     insertedUser = await UserModel.create(user)
     const { username, ...sampleLogin } = user
     response = await request(app).post("/users/login").send(sampleLogin)
 }
 
+// Delete the sample user from the db
 const deleteSampleUser = async () => {
     const deletedUser = await UserModel.findByIdAndDelete(insertedUser._id)
 }
 
+// Insert a sample user and their associated books. Update user inventory 
+// table to link them. Log in with that user to produce a web token.
 const setup = async (sampleUser) => {
     insertedUser = await UserModel.create(sampleUser)
 
@@ -93,10 +98,15 @@ const setup = async (sampleUser) => {
 
     insertedInventoryItems = await UserInventoryModel.create(sampleInventoryItems)
 
+    // Extract login credentials
     const { username, ...sampleLogin } = sampleUser
+
+    // Log in with credentials to generate a web token for use in tests
     response = await request(app).post("/users/login").send(sampleLogin)
 }
 
+// Delete the user and all associated entries from database. Called 
+// after tests are finished.
 const teardown = async () => {
     const deletedInventoryItems = await UserInventoryModel.deleteMany({ user: insertedUser._id })
     const deletedBooks = await BookModel.deleteMany({ _id: { $in: bookIds } })

@@ -1,5 +1,4 @@
 import asyncHandler from 'express-async-handler'
-import bcrypt from 'bcrypt'
 import { UserModel } from "../models/userModel.js"
 
 // GET method request controller for retrieving the current logged in users details.
@@ -12,7 +11,6 @@ const getOneUser = asyncHandler(async (req,  res) => {
         res.status(201).send(user)
     }
     else {
-        // res.status(404).send({ error: 'User not found' })
         throw Error('User not found')
     }
 })

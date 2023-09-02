@@ -14,7 +14,7 @@ const server = app.listen(PORT, console.log(`Server Started on ${PORT}`)) // Out
 const io = new Server(server, {
    pingTimeout: 60000,
    cors: {
-      origin: "http://localhost:3001", // the local host of frontend when you do npm run dev
+      origin: "https://aquamarine-kataifi-2f652b.netlify.app", // the local host of frontend when you do npm run dev
    }
 })
 

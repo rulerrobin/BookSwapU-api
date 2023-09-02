@@ -6,6 +6,7 @@ import userRoutes from './routes/userRoutes.js'
 import chatRoutes from './routes/chatRoutes.js'
 import messageRoutes from './routes/messageRoutes.js'
 import { notFound, errorHandler } from './middleware/errorMiddleware.js'
+import path from 'path'
 
 import verifyToken from "./middleware/verifyToken.js"
 import authRouter from './routes/authRoutes.js'
@@ -29,7 +30,6 @@ app.use('/api/chat', chatRoutes)
 app.use('/api/message', messageRoutes)
 
 // GET method default route handler.
-app.get('/', (request, response) => response.send({ info: 'BookSwapU API!' }))
 
 // Contains the routes for authorization & jwt authentication
 app.use(baseURI, authRouter)
@@ -47,6 +47,19 @@ app.get('/api/chat/:id', (req, res) => {
    const singleChat = chats.find( c => c._id === req.params.id);
    res.send(singleChat)
 })
+
+const __dirname1 = path.resolve()
+
+if (process.env.NODE_ENV === "production") {
+   app.use(express.static(path.join(__dirname1, "BookSwapU", "src", "BookSwapU2")))
+ 
+   app.get("*", (req, res) =>
+     res.sendFile(path.resolve(__dirname1, "BookSwapU", "src", "BookSwapU2", "index.html"))
+   )
+ } else {
+    // GET method default route handler.
+    app.get('/', (request, response) => response.send({ info: 'BookSwapU API!' }))
+ }
 
 // Error handling middleware - All exceptions are 
 // directed to these.
